@@ -96,8 +96,8 @@ export default function SettingsScreen() {
   return (
     <View>
       <PageHeader
-        title="Mais"
-        subtitle="Configurações e gerenciamento do sistema"
+        title="Configurações"
+        subtitle="Gerencie preferências, usuários e recursos do sistema."
       />
 
       <View style={styles.section}>

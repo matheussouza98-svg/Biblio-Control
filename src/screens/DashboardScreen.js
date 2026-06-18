@@ -105,8 +105,8 @@ export default function DashboardScreen({ onNavigate }) {
   return (
     <View>
       <PageHeader
-        title="Dashboard"
-        subtitle="Visão geral da biblioteca — 18 de junho de 2026"
+        title="Painel de Controle da Biblioteca"
+        subtitle="Gerencie livros, empréstimos, devoluções e usuários em um único lugar."
         actionLabel="Novo Empréstimo"
         actionIcon="add-circle-outline"
         onAction={() => onNavigate('loans', { tab: 'new' })}

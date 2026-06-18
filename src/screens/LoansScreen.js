@@ -108,7 +108,8 @@ export default function LoansScreen({ initialTab = 'history' }) {
     <View>
       <PageHeader
         title="Empréstimos"
-        subtitle="Gerencie empréstimos, devoluções e histórico"
+        subtitle="Gerencie empréstimos, devoluções e histórico
+Total de 24 empréstimos registrados."
       />
 
       <View style={styles.tabs}>

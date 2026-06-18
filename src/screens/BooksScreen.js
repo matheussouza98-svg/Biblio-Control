@@ -44,7 +44,7 @@ export default function BooksScreen({ books, onAddBook, onNavigate }) {
     <View>
       <PageHeader
         title="Livros"
-        subtitle={`${filteredBooks.length} livro(s) encontrado(s)`}
+        subtitle={`${filteredBooks.length} livro(s) cadastrados.`}
         actionLabel="Cadastrar Livros"
         actionIcon="add-circle-outline"
         onAction={() => setShowRegister(true)}

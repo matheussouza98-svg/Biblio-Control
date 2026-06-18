@@ -121,7 +121,7 @@ export default function StudentsScreen() {
     <View>
       <PageHeader
         title="Alunos"
-        subtitle={`${filtered.length} aluno(s) cadastrado(s)`}
+        subtitle={`${filtered.length} aluno(s) cadastrados.`}
         actionLabel="Novo Aluno"
         actionIcon="person-add-outline"
       />
@@ -148,6 +148,7 @@ export default function StudentsScreen() {
           <Text style={[styles.th, styles.colReg]}>Matrícula</Text>
           <Text style={[styles.th, styles.colClass]}>Turma</Text>
           <Text style={[styles.th, styles.colCourse]}>Curso</Text>
+          <Text style={[styles.th, styles.colCourse]}>Ações</Text>
         </View>
 
         {filtered.map((student, index) => (

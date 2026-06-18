@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { id: 'books', label: 'Livros', icon: 'book-outline', iconActive: 'book' },
   { id: 'students', label: 'Alunos', icon: 'school-outline', iconActive: 'school' },
   { id: 'loans', label: 'Empréstimos', icon: 'swap-horizontal-outline', iconActive: 'swap-horizontal' },
-  { id: 'settings', label: 'Mais', icon: 'menu-outline', iconActive: 'menu' },
+  { id: 'settings', label: 'Configurações', icon: 'settings-outline', iconActive: 'settings' },
 ];
 
 function createStyles(colors) {
