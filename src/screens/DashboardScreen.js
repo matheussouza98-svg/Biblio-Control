@@ -4,9 +4,104 @@ import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';
 import StatusBadge from '../components/StatusBadge';
 import { stats, recentBorrows } from '../data/mockData';
-import { colors } from '../theme/colors';
+import { useTheme } from '../theme/ThemeContext';
+import { useThemedStyles } from '../theme/useThemedStyles';
+
+function createStyles(colors) {
+  return StyleSheet.create({
+    statsRow: {
+      flexDirection: 'row',
+      gap: 16,
+      marginBottom: 16,
+      flexWrap: 'wrap',
+    },
+    section: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      padding: 20,
+      marginTop: 8,
+    },
+    sectionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 16,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: '700',
+      color: colors.text,
+    },
+    seeAll: {
+      fontSize: 13,
+      color: colors.primary,
+      fontWeight: '600',
+    },
+    table: {
+      borderRadius: 8,
+      overflow: 'hidden',
+    },
+    tableHeader: {
+      flexDirection: 'row',
+      backgroundColor: colors.surfaceAlt,
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    th: {
+      fontSize: 12,
+      fontWeight: '700',
+      color: colors.textSecondary,
+      textTransform: 'uppercase',
+      letterSpacing: 0.5,
+    },
+    tableRow: {
+      flexDirection: 'row',
+      paddingVertical: 14,
+      paddingHorizontal: 16,
+      alignItems: 'center',
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    tableRowAlt: {
+      backgroundColor: colors.surfaceAlt,
+    },
+    td: {
+      fontSize: 13,
+      color: colors.text,
+    },
+    colBook: { flex: 2.5 },
+    colStudent: { flex: 2 },
+    colDate: { flex: 1.2 },
+    colStatus: { flex: 1 },
+    bookCell: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+    },
+    miniCover: {
+      width: 32,
+      height: 32,
+      borderRadius: 6,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    bookTitle: {
+      fontSize: 13,
+      fontWeight: '600',
+      color: colors.text,
+      flex: 1,
+    },
+  });
+}
 
 export default function DashboardScreen({ onNavigate }) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
+
   return (
     <View>
       <PageHeader
@@ -67,92 +162,3 @@ export default function DashboardScreen({ onNavigate }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  statsRow: {
-    flexDirection: 'row',
-    gap: 16,
-    marginBottom: 16,
-    flexWrap: 'wrap',
-  },
-  section: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 20,
-    marginTop: 8,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: colors.text,
-  },
-  seeAll: {
-    fontSize: 13,
-    color: colors.primary,
-    fontWeight: '600',
-  },
-  table: {
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: colors.surfaceAlt,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  th: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: colors.textSecondary,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  tableRow: {
-    flexDirection: 'row',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  tableRowAlt: {
-    backgroundColor: colors.surfaceAlt,
-  },
-  td: {
-    fontSize: 13,
-    color: colors.text,
-  },
-  colBook: { flex: 2.5 },
-  colStudent: { flex: 2 },
-  colDate: { flex: 1.2 },
-  colStatus: { flex: 1 },
-  bookCell: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  miniCover: {
-    width: 32,
-    height: 32,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bookTitle: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: colors.text,
-    flex: 1,
-  },
-});

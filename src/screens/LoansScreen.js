@@ -6,7 +6,8 @@ import StatusBadge from '../components/StatusBadge';
 import NewBorrowScreen from './NewBorrowScreen';
 import ReturnScreen from './ReturnScreen';
 import { recentBorrows } from '../data/mockData';
-import { colors } from '../theme/colors';
+import { useTheme } from '../theme/ThemeContext';
+import { useThemedStyles } from '../theme/useThemedStyles';
 
 const TABS = [
   { id: 'history', label: 'Histórico', icon: 'time-outline' },
@@ -14,8 +15,94 @@ const TABS = [
   { id: 'return', label: 'Devolução', icon: 'return-down-back-outline' },
 ];
 
+function createStyles(colors) {
+  return StyleSheet.create({
+    tabs: {
+      flexDirection: 'row',
+      gap: 8,
+      marginBottom: 24,
+      flexWrap: 'wrap',
+    },
+    tab: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      paddingHorizontal: 18,
+      paddingVertical: 12,
+      borderRadius: 10,
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    tabActive: {
+      backgroundColor: colors.primary,
+      borderColor: colors.primary,
+    },
+    tabText: {
+      fontSize: 14,
+      fontWeight: '500',
+      color: colors.textSecondary,
+    },
+    tabTextActive: {
+      color: colors.white,
+      fontWeight: '600',
+    },
+    table: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      overflow: 'hidden',
+    },
+    tableHeader: {
+      flexDirection: 'row',
+      backgroundColor: colors.surfaceAlt,
+      paddingVertical: 14,
+      paddingHorizontal: 20,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    th: {
+      fontSize: 12,
+      fontWeight: '700',
+      color: colors.textSecondary,
+      textTransform: 'uppercase',
+      letterSpacing: 0.5,
+    },
+    row: {
+      flexDirection: 'row',
+      paddingVertical: 14,
+      paddingHorizontal: 20,
+      alignItems: 'center',
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    rowAlt: {
+      backgroundColor: colors.surfaceAlt,
+    },
+    td: {
+      fontSize: 13,
+      color: colors.text,
+    },
+    cover: {
+      width: 32,
+      height: 32,
+      borderRadius: 6,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    bookTitle: {
+      fontSize: 13,
+      fontWeight: '600',
+      flex: 1,
+    },
+  });
+}
+
 export default function LoansScreen({ initialTab = 'history' }) {
   const [activeTab, setActiveTab] = useState(initialTab);
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   return (
     <View>
@@ -80,85 +167,3 @@ export default function LoansScreen({ initialTab = 'history' }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  tabs: {
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 24,
-    flexWrap: 'wrap',
-  },
-  tab: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 10,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  tabActive: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  tabText: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: colors.textSecondary,
-  },
-  tabTextActive: {
-    color: colors.white,
-    fontWeight: '600',
-  },
-  table: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    overflow: 'hidden',
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: colors.surfaceAlt,
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  th: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: colors.textSecondary,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  row: {
-    flexDirection: 'row',
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  rowAlt: {
-    backgroundColor: colors.surfaceAlt,
-  },
-  td: {
-    fontSize: 13,
-    color: colors.text,
-  },
-  cover: {
-    width: 32,
-    height: 32,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bookTitle: {
-    fontSize: 13,
-    fontWeight: '600',
-    flex: 1,
-  },
-});

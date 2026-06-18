@@ -4,7 +4,7 @@ import PageHeader from '../components/PageHeader';
 import SearchBar from '../components/SearchBar';
 import FilterChips from '../components/FilterChips';
 import { students } from '../data/mockData';
-import { colors } from '../theme/colors';
+import { useThemedStyles } from '../theme/useThemedStyles';
 
 const COURSE_FILTERS = [
   { id: 'all', label: 'Todos (180)' },
@@ -23,9 +23,85 @@ function getInitials(name) {
     .toUpperCase();
 }
 
+function createStyles(colors) {
+  return StyleSheet.create({
+    toolbar: {
+      marginBottom: 16,
+    },
+    filters: {
+      marginBottom: 20,
+    },
+    table: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      overflow: 'hidden',
+    },
+    tableHeader: {
+      flexDirection: 'row',
+      backgroundColor: colors.surfaceAlt,
+      paddingVertical: 14,
+      paddingHorizontal: 20,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    th: {
+      fontSize: 12,
+      fontWeight: '700',
+      color: colors.textSecondary,
+      textTransform: 'uppercase',
+      letterSpacing: 0.5,
+    },
+    row: {
+      flexDirection: 'row',
+      paddingVertical: 16,
+      paddingHorizontal: 20,
+      alignItems: 'center',
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    rowAlt: {
+      backgroundColor: colors.surfaceAlt,
+    },
+    td: {
+      fontSize: 14,
+      color: colors.text,
+    },
+    colName: { flex: 3 },
+    colReg: { flex: 1.2 },
+    colClass: { flex: 2 },
+    colCourse: { flex: 1.8 },
+    nameCell: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 14,
+    },
+    avatar: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    avatarText: {
+      color: colors.white,
+      fontWeight: '700',
+      fontSize: 14,
+    },
+    name: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: colors.text,
+      flex: 1,
+    },
+  });
+}
+
 export default function StudentsScreen() {
   const [search, setSearch] = useState('');
   const [courseFilter, setCourseFilter] = useState('all');
+  const styles = useThemedStyles(createStyles);
 
   const filtered = useMemo(() => {
     const query = search.toLowerCase();
@@ -91,76 +167,3 @@ export default function StudentsScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  toolbar: {
-    marginBottom: 16,
-  },
-  filters: {
-    marginBottom: 20,
-  },
-  table: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    overflow: 'hidden',
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: colors.surfaceAlt,
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  th: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: colors.textSecondary,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  row: {
-    flexDirection: 'row',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  rowAlt: {
-    backgroundColor: colors.surfaceAlt,
-  },
-  td: {
-    fontSize: 14,
-    color: colors.text,
-  },
-  colName: { flex: 3 },
-  colReg: { flex: 1.2 },
-  colClass: { flex: 2 },
-  colCourse: { flex: 1.8 },
-  nameCell: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: {
-    color: colors.white,
-    fontWeight: '700',
-    fontSize: 14,
-  },
-  name: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.text,
-    flex: 1,
-  },
-});

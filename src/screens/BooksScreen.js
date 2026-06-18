@@ -4,7 +4,7 @@ import PageHeader from '../components/PageHeader';
 import SearchBar from '../components/SearchBar';
 import FilterChips from '../components/FilterChips';
 import BookCard from '../components/BookCard';
-import { books } from '../data/mockData';
+import RegisterBookScreen from './RegisterBookScreen';
 
 const FILTERS = [
   { id: 'all', label: 'Todos' },
@@ -12,9 +12,10 @@ const FILTERS = [
   { id: 'borrowed', label: 'Emprestados' },
 ];
 
-export default function BooksScreen({ onNavigate }) {
+export default function BooksScreen({ books, onAddBook, onNavigate }) {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
+  const [showRegister, setShowRegister] = useState(false);
 
   const filteredBooks = useMemo(() => {
     return books.filter((book) => {
@@ -28,15 +29,25 @@ export default function BooksScreen({ onNavigate }) {
         book.barcode.includes(query);
       return matchesFilter && matchesSearch;
     });
-  }, [search, filter]);
+  }, [books, search, filter]);
+
+  if (showRegister) {
+    return (
+      <RegisterBookScreen
+        onBack={() => setShowRegister(false)}
+        onSave={onAddBook}
+      />
+    );
+  }
 
   return (
     <View>
       <PageHeader
         title="Livros"
         subtitle={`${filteredBooks.length} livro(s) encontrado(s)`}
-        actionLabel="Adicionar Livro"
-        actionIcon="add-outline"
+        actionLabel="Cadastrar Livros"
+        actionIcon="add-circle-outline"
+        onAction={() => setShowRegister(true)}
       />
 
       <View style={styles.toolbar}>
@@ -56,7 +67,7 @@ export default function BooksScreen({ onNavigate }) {
           <BookCard
             key={book.id}
             book={book}
-            onPress={(b) => onNavigate('bookDetail', { book: b })}
+            onPress={(b) => onNavigate('bookDetail', { bookId: b.id })}
           />
         ))}
       </View>

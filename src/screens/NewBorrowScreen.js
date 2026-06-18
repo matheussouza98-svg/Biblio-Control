@@ -2,7 +2,141 @@ import { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { books, students } from '../data/mockData';
-import { colors } from '../theme/colors';
+import { useTheme } from '../theme/ThemeContext';
+import { useThemedStyles } from '../theme/useThemedStyles';
+
+function createStyles(colors) {
+  return StyleSheet.create({
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      padding: 28,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: '700',
+      color: colors.text,
+      marginBottom: 24,
+    },
+    formRow: {
+      flexDirection: 'row',
+      gap: 24,
+      flexWrap: 'wrap',
+      marginBottom: 24,
+    },
+    formSection: {
+      flex: 1,
+      minWidth: 280,
+    },
+    label: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: colors.text,
+      marginBottom: 10,
+    },
+    searchInput: {
+      backgroundColor: colors.surfaceAlt,
+      borderRadius: 10,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      fontSize: 14,
+      color: colors.text,
+      borderWidth: 1,
+      borderColor: colors.border,
+      marginBottom: 10,
+      outlineStyle: 'none',
+    },
+    list: {
+      maxHeight: 200,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 10,
+      backgroundColor: colors.surfaceAlt,
+    },
+    listItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+      padding: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    listItemActive: {
+      backgroundColor: colors.primaryLight,
+    },
+    avatar: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    avatarText: {
+      color: colors.white,
+      fontWeight: '700',
+    },
+    bookCover: {
+      width: 36,
+      height: 36,
+      borderRadius: 6,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    itemTitle: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: colors.text,
+    },
+    itemSub: {
+      fontSize: 12,
+      color: colors.textSecondary,
+      marginTop: 2,
+    },
+    check: {
+      marginLeft: 'auto',
+    },
+    datesRow: {
+      flexDirection: 'row',
+      gap: 20,
+      marginBottom: 28,
+      flexWrap: 'wrap',
+    },
+    dateField: {
+      flex: 1,
+      minWidth: 200,
+    },
+    dateInput: {
+      backgroundColor: colors.surfaceAlt,
+      borderRadius: 10,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      fontSize: 14,
+      color: colors.text,
+      borderWidth: 1,
+      borderColor: colors.border,
+      outlineStyle: 'none',
+    },
+    confirmBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 10,
+      backgroundColor: colors.primary,
+      paddingVertical: 16,
+      borderRadius: 10,
+    },
+    confirmBtnDisabled: {
+      opacity: 0.5,
+    },
+    confirmText: {
+      color: colors.white,
+      fontSize: 16,
+      fontWeight: '700',
+    },
+  });
+}
 
 export default function NewBorrowScreen() {
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -11,6 +145,8 @@ export default function NewBorrowScreen() {
   const [returnDate, setReturnDate] = useState('02/07/2026');
   const [studentSearch, setStudentSearch] = useState('');
   const [bookSearch, setBookSearch] = useState('');
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   const filteredStudents = students.filter((s) =>
     s.name.toLowerCase().includes(studentSearch.toLowerCase())
@@ -116,134 +252,3 @@ export default function NewBorrowScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 28,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: colors.text,
-    marginBottom: 24,
-  },
-  formRow: {
-    flexDirection: 'row',
-    gap: 24,
-    flexWrap: 'wrap',
-    marginBottom: 24,
-  },
-  formSection: {
-    flex: 1,
-    minWidth: 280,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.text,
-    marginBottom: 10,
-  },
-  searchInput: {
-    backgroundColor: colors.surfaceAlt,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 14,
-    color: colors.text,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 10,
-    outlineStyle: 'none',
-  },
-  list: {
-    maxHeight: 200,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 10,
-    backgroundColor: colors.surfaceAlt,
-  },
-  listItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  listItemActive: {
-    backgroundColor: colors.primaryLight,
-  },
-  avatar: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: {
-    color: colors.white,
-    fontWeight: '700',
-  },
-  bookCover: {
-    width: 36,
-    height: 36,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  itemTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: colors.text,
-  },
-  itemSub: {
-    fontSize: 12,
-    color: colors.textSecondary,
-    marginTop: 2,
-  },
-  check: {
-    marginLeft: 'auto',
-  },
-  datesRow: {
-    flexDirection: 'row',
-    gap: 20,
-    marginBottom: 28,
-    flexWrap: 'wrap',
-  },
-  dateField: {
-    flex: 1,
-    minWidth: 200,
-  },
-  dateInput: {
-    backgroundColor: colors.surfaceAlt,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 14,
-    color: colors.text,
-    borderWidth: 1,
-    borderColor: colors.border,
-    outlineStyle: 'none',
-  },
-  confirmBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    backgroundColor: colors.primary,
-    paddingVertical: 16,
-    borderRadius: 10,
-  },
-  confirmBtnDisabled: {
-    opacity: 0.5,
-  },
-  confirmText: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: '700',
-  },
-});

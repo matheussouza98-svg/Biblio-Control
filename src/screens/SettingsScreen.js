@@ -1,16 +1,123 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import PageHeader from '../components/PageHeader';
 import { settingsSections } from '../data/mockData';
-import { colors } from '../theme/colors';
+import { useTheme } from '../theme/ThemeContext';
+import { useThemedStyles } from '../theme/useThemedStyles';
+
+function createStyles(colors) {
+  return StyleSheet.create({
+    section: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      marginBottom: 20,
+      overflow: 'hidden',
+    },
+    sectionTitle: {
+      fontSize: 12,
+      fontWeight: '700',
+      color: colors.textMuted,
+      textTransform: 'uppercase',
+      letterSpacing: 1,
+      paddingHorizontal: 20,
+      paddingTop: 16,
+      paddingBottom: 8,
+    },
+    item: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 16,
+      paddingVertical: 16,
+      paddingHorizontal: 20,
+    },
+    itemBorder: {
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    itemIcon: {
+      width: 44,
+      height: 44,
+      borderRadius: 10,
+      backgroundColor: colors.primaryLight,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    itemContent: {
+      flex: 1,
+    },
+    itemLabel: {
+      fontSize: 15,
+      fontWeight: '600',
+      color: colors.text,
+      marginBottom: 2,
+    },
+    itemDesc: {
+      fontSize: 12,
+      color: colors.textSecondary,
+    },
+    infoCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 20,
+      backgroundColor: colors.primaryLight,
+      borderRadius: 12,
+      padding: 24,
+      borderWidth: 1,
+      borderColor: colors.primary,
+    },
+    infoContent: {
+      flex: 1,
+    },
+    infoTitle: {
+      fontSize: 18,
+      fontWeight: '800',
+      color: colors.primary,
+      letterSpacing: 1,
+    },
+    infoSub: {
+      fontSize: 13,
+      color: colors.textSecondary,
+      marginTop: 4,
+    },
+    infoVersion: {
+      fontSize: 12,
+      color: colors.textMuted,
+      marginTop: 8,
+    },
+  });
+}
 
 export default function SettingsScreen() {
+  const { colors, isDark, setDarkMode } = useTheme();
+  const styles = useThemedStyles(createStyles);
+
   return (
     <View>
       <PageHeader
         title="Mais"
         subtitle="Configurações e gerenciamento do sistema"
       />
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Aparência</Text>
+        <View style={styles.item}>
+          <View style={styles.itemIcon}>
+            <Ionicons name={isDark ? 'moon' : 'sunny-outline'} size={22} color={colors.primary} />
+          </View>
+          <View style={styles.itemContent}>
+            <Text style={styles.itemLabel}>Modo Escuro</Text>
+            <Text style={styles.itemDesc}>Alternar entre tema claro e escuro</Text>
+          </View>
+          <Switch
+            value={isDark}
+            onValueChange={setDarkMode}
+            trackColor={{ false: colors.border, true: colors.primary }}
+            thumbColor={colors.white}
+          />
+        </View>
+      </View>
 
       {settingsSections.map((section) => (
         <View key={section.title} style={styles.section}>
@@ -45,85 +152,3 @@ export default function SettingsScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  section: {
-    backgroundColor: colors.surface,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 20,
-    overflow: 'hidden',
-  },
-  sectionTitle: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: colors.textMuted,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 8,
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-  },
-  itemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  itemIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 10,
-    backgroundColor: colors.primaryLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  itemContent: {
-    flex: 1,
-  },
-  itemLabel: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: colors.text,
-    marginBottom: 2,
-  },
-  itemDesc: {
-    fontSize: 12,
-    color: colors.textSecondary,
-  },
-  infoCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 20,
-    backgroundColor: colors.primaryLight,
-    borderRadius: 12,
-    padding: 24,
-    borderWidth: 1,
-    borderColor: colors.primary,
-  },
-  infoContent: {
-    flex: 1,
-  },
-  infoTitle: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: colors.primary,
-    letterSpacing: 1,
-  },
-  infoSub: {
-    fontSize: 13,
-    color: colors.textSecondary,
-    marginTop: 4,
-  },
-  infoVersion: {
-    fontSize: 12,
-    color: colors.textMuted,
-    marginTop: 8,
-  },
-});
