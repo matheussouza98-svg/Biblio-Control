@@ -1,20 +1,51 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import AppLayout from './src/layout/AppLayout';
+import DashboardScreen from './src/screens/DashboardScreen';
+import BooksScreen from './src/screens/BooksScreen';
+import BookDetailScreen from './src/screens/BookDetailScreen';
+import StudentsScreen from './src/screens/StudentsScreen';
+import LoansScreen from './src/screens/LoansScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 
 export default function App() {
+  const [screen, setScreen] = useState('dashboard');
+  const [params, setParams] = useState({});
+
+  const navigate = (target, navParams = {}) => {
+    setScreen(target);
+    setParams(navParams);
+  };
+
+  const renderScreen = () => {
+    switch (screen) {
+      case 'dashboard':
+        return <DashboardScreen onNavigate={navigate} />;
+      case 'books':
+        return <BooksScreen onNavigate={navigate} />;
+      case 'bookDetail':
+        return (
+          <BookDetailScreen
+            book={params.book}
+            onBack={() => navigate('books')}
+          />
+        );
+      case 'students':
+        return <StudentsScreen />;
+      case 'loans':
+        return <LoansScreen key={params.tab || 'history'} initialTab={params.tab || 'history'} />;
+      case 'settings':
+        return <SettingsScreen />;
+      default:
+        return <DashboardScreen onNavigate={navigate} />;
+    }
+  };
+
+  const sidebarScreen =
+    screen === 'bookDetail' ? 'books' : screen;
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AppLayout activeScreen={sidebarScreen} onNavigate={navigate}>
+      {renderScreen()}
+    </AppLayout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
