@@ -3,10 +3,29 @@ import { useTheme } from '../theme/ThemeContext';
 
 function getStatusConfig(colors) {
   return {
-    available: { label: 'Disponível', bg: colors.successBg, text: colors.success },
-    borrowed: { label: 'Emprestado', bg: colors.dangerBg, text: colors.danger },
-    active: { label: 'Em aberto', bg: colors.dangerBg, text: colors.danger },
-    returned: { label: 'Devolvido', bg: colors.successBg, text: colors.success },
+    available: {
+      label: 'Disponível',
+      bg: '#6B7280',
+      text: '#FFFFFF',
+    },
+
+    borrowed: {
+      label: 'Emprestado',
+      bg: '#2563EB', // azul sólido
+      text: '#FFFFFF',
+    },
+
+    overdue: {
+      label: 'Atrasado',
+      bg: '#DC2626', // vermelho sólido
+      text: '#FFFFFF',
+    },
+
+    returned: {
+      label: 'Devolvido',
+      bg: '#16A34A', // verde sólido
+      text: '#FFFFFF',
+    },
   };
 }
 

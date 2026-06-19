@@ -1,13 +1,25 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeContext';
 import { useThemedStyles } from '../theme/useThemedStyles';
 
 const NAV_ITEMS = [
   { id: 'dashboard', label: 'Início', icon: 'home-outline', iconActive: 'home' },
+
   { id: 'books', label: 'Livros', icon: 'book-outline', iconActive: 'book' },
+
   { id: 'students', label: 'Alunos', icon: 'school-outline', iconActive: 'school' },
+
   { id: 'loans', label: 'Empréstimos', icon: 'swap-horizontal-outline', iconActive: 'swap-horizontal' },
+
+  {
+    id: 'reports',
+    label: 'Relatórios',
+    icon: 'bar-chart-outline',
+    iconActive: 'bar-chart',
+  },
+
   { id: 'settings', label: 'Configurações', icon: 'settings-outline', iconActive: 'settings' },
 ];
 
@@ -62,6 +74,26 @@ function createStyles(colors) {
     navList: {
       flex: 1,
     },
+
+    subMenu: {
+      marginLeft: 24,
+      marginBottom: 8,
+    },
+
+    subMenuItem: {
+      paddingVertical: 8,
+      paddingLeft: 20,
+    },
+
+    subMenuText: {
+      color: 'rgba(255,255,255,0.65)',
+      fontSize: 14,
+    },
+
+    arrow: {
+      marginLeft: 'auto',
+    },
+
     navItem: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -133,6 +165,8 @@ function createStyles(colors) {
 }
 
 export default function Sidebar({ activeScreen, onNavigate }) {
+  const [booksOpen, setBooksOpen] = useState(false);
+
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
 
@@ -151,23 +185,151 @@ export default function Sidebar({ activeScreen, onNavigate }) {
       <Text style={styles.navLabel}>NAVEGAÇÃO</Text>
 
       <ScrollView style={styles.navList} showsVerticalScrollIndicator={false}>
-        {NAV_ITEMS.map((item) => {
+
+        <TouchableOpacity
+          style={[
+            styles.navItem,
+            activeScreen === 'dashboard' && styles.navItemActive,
+          ]}
+          onPress={() => onNavigate('dashboard')}
+        >
+          <Ionicons
+            name={activeScreen === 'dashboard' ? 'home' : 'home-outline'}
+            size={22}
+            color={
+              activeScreen === 'dashboard'
+                ? colors.white
+                : 'rgba(255,255,255,0.65)'
+            }
+          />
+
+          <Text
+            style={[
+              styles.navText,
+              activeScreen === 'dashboard' && styles.navTextActive,
+            ]}
+          >
+            Início
+          </Text>
+
+          {activeScreen === 'dashboard' && (
+            <View style={styles.activeIndicator} />
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => setBooksOpen(!booksOpen)}
+        >
+          <Ionicons
+            name="book-outline"
+            size={22}
+            color="rgba(255,255,255,0.65)"
+          />
+
+          <Text style={styles.navText}>Livros</Text>
+
+          <Ionicons
+            name={booksOpen ? 'chevron-down' : 'chevron-forward'}
+            size={18}
+            color="rgba(255,255,255,0.65)"
+            style={styles.arrow}
+          />
+        </TouchableOpacity>
+
+        {booksOpen && (
+          <View style={styles.subMenu}>
+            <TouchableOpacity
+              style={styles.subMenuItem}
+              onPress={() => onNavigate('books')}
+            >
+              <Text
+                style={[
+                  styles.subMenuText,
+                  activeScreen === 'books' && {
+                    color: colors.white,
+                    fontWeight: '700',
+                  },
+                ]}
+              >
+                📖 Todos os Livros
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.subMenuItem}
+              onPress={() => onNavigate('registerBook')}
+            >
+              <Text
+                style={[
+                  styles.subMenuText,
+                  activeScreen === 'registerBook' && {
+                    color: colors.white,
+                    fontWeight: '700',
+                  },
+                ]}
+              >
+                ➕ Cadastrar Livro
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.subMenuItem}
+              onPress={() => onNavigate('categories')}
+            >
+              <Text
+                style={[
+                  styles.subMenuText,
+                  activeScreen === 'categories' && {
+                    color: colors.white,
+                    fontWeight: '700',
+                  },
+                ]}
+              >
+                🏷 Categorias
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.subMenuItem}
+              onPress={() => onNavigate('locations')}
+            >
+              <Text
+                style={[
+                  styles.subMenuText,
+                  activeScreen === 'locations' && {
+                    color: colors.white,
+                    fontWeight: '700',
+                  },
+                ]}
+              >
+                📍 Localizações
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {NAV_ITEMS.filter(
+          item => item.id !== 'books' && item.id !== 'dashboard'
+        ).map((item) => {
           const isActive = activeScreen === item.id;
+
           return (
             <TouchableOpacity
               key={item.id}
               style={[styles.navItem, isActive && styles.navItemActive]}
               onPress={() => onNavigate(item.id)}
-              activeOpacity={0.7}
             >
               <Ionicons
                 name={isActive ? item.iconActive : item.icon}
                 size={22}
                 color={isActive ? colors.white : 'rgba(255,255,255,0.65)'}
               />
+
               <Text style={[styles.navText, isActive && styles.navTextActive]}>
                 {item.label}
               </Text>
+
               {isActive && <View style={styles.activeIndicator} />}
             </TouchableOpacity>
           );

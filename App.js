@@ -9,6 +9,9 @@ import StudentsScreen from './src/screens/StudentsScreen';
 import LoansScreen from './src/screens/LoansScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import { books as initialBooks } from './src/data/mockData';
+import ReportsScreen from './src/screens/ReportsScreen';
+import CategoriesScreen from './src/screens/CategoriesScreen';
+import LocationsScreen from './src/screens/LocationsScreen';
 
 const COVER_COLORS = ['#0047AB', '#EA580C', '#16A34A', '#7C3AED', '#DC2626', '#0891B2'];
 
@@ -84,6 +87,16 @@ export default function App() {
             onNavigate={navigate}
           />
         );
+
+      case 'registerBook':
+        return (
+          <RegisterBookScreen
+            mode="create"
+            onBack={() => navigate('books')}
+            onSave={addBook}
+          />
+        );
+
       case 'bookDetail': {
         const book = getBookById(params.bookId);
         if (!book) {
@@ -119,6 +132,16 @@ export default function App() {
         return <StudentsScreen />;
       case 'loans':
         return <LoansScreen key={params.tab || 'history'} initialTab={params.tab || 'history'} />;
+
+      case 'reports':
+        return <ReportsScreen />;
+
+      case 'categories':
+        return <CategoriesScreen />;
+
+      case 'locations':
+        return <LocationsScreen />;
+
       case 'settings':
         return <SettingsScreen />;
       default:

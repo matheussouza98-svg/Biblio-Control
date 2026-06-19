@@ -111,7 +111,7 @@ export const recentBorrows = [
     studentName: students[0].name,
     borrowDate: '18/06/2026',
     returnDate: '02/07/2026',
-    status: 'active',
+    status: 'borrowed',
     coverColor: '#0047AB',
   },
   {
@@ -120,7 +120,7 @@ export const recentBorrows = [
     studentName: students[45].name,
     borrowDate: '17/06/2026',
     returnDate: '01/07/2026',
-    status: 'active',
+    status: 'overdue',
     coverColor: '#EA580C',
   },
   {
@@ -138,7 +138,7 @@ export const recentBorrows = [
     studentName: students[120].name,
     borrowDate: '15/06/2026',
     returnDate: '29/06/2026',
-    status: 'active',
+    status: 'borrowed',
     coverColor: '#DC2626',
   },
   {
