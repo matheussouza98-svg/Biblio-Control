@@ -13,7 +13,7 @@ import ReportsScreen from './src/screens/ReportsScreen';
 import CategoriesScreen from './src/screens/CategoriesScreen';
 import LocationsScreen from './src/screens/LocationsScreen';
 
-const COVER_COLORS = ['#0047AB', '#EA580C', '#16A34A', '#7C3AED', '#DC2626', '#0891B2'];
+const COVER_COLORS = ['#1A7A3C', '#E8750A', '#15803D', '#7C3AED', '#DC2626', '#0891B2'];
 
 function buildBookFromForm(formData, existingBook = null) {
   const quantity = parseInt(formData.quantity, 10) || 0;

@@ -1,5 +1,5 @@
 const AVATAR_COLORS = [
-  '#0047AB', '#16A34A', '#EA580C', '#7C3AED', '#DC2626',
+  '#1A7A3C', '#15803D', '#E8750A', '#7C3AED', '#DC2626',
   '#0891B2', '#BE185D', '#CA8A04', '#059669', '#9333EA',
   '#2563EB', '#D97706', '#0D9488', '#E11D48', '#4F46E5',
 ];
@@ -42,9 +42,9 @@ const TURMAS = [
   { class: '1° Administração', course: 'Administração', count: 15 },
   { class: '2° Administração', course: 'Administração', count: 15 },
   { class: '3° Administração', course: 'Administração', count: 15 },
-  { class: '1° Desenvolvimento de Sistemas', course: 'Desenvolvimento de Sistemas', count: 15 },
-  { class: '2° Desenvolvimento de Sistemas', course: 'Desenvolvimento de Sistemas', count: 15 },
-  { class: '3° Desenvolvimento de Sistemas', course: 'Desenvolvimento de Sistemas', count: 15 },
+  { class: '1° Desenvolvimento de Sistema', course: 'Desenvolvimento de Sistema', count: 15 },
+  { class: '2° Desenvolvimento de Sistema', course: 'Desenvolvimento de Sistema', count: 15 },
+  { class: '3° Desenvolvimento de Sistema', course: 'Desenvolvimento de Sistema', count: 15 },
   { class: '1° Edificações', course: 'Edificações', count: 15 },
   { class: '2° Edificações', course: 'Edificações', count: 15 },
   { class: '3° Edificações', course: 'Edificações', count: 15 },
@@ -52,6 +52,8 @@ const TURMAS = [
   { class: '2° Massoterapia', course: 'Massoterapia', count: 15 },
   { class: '3° Massoterapia', course: 'Massoterapia', count: 15 },
 ];
+
+export const CLASS_OPTIONS = TURMAS.map(({ class: turma }) => turma);
 
 function buildName(index) {
   const first = FIRST_NAMES[index % FIRST_NAMES.length];
@@ -91,7 +93,7 @@ export const turmas = TURMAS.map(({ class: turma, course, count }) => ({
 
 export const coursesSummary = [
   { course: 'Administração', total: 45, turmas: ['1°', '2°', '3°'] },
-  { course: 'Desenvolvimento de Sistemas', total: 45, turmas: ['1°', '2°', '3°'] },
+  { course: 'Desenvolvimento de Sistema', total: 45, turmas: ['1°', '2°', '3°'] },
   { course: 'Edificações', total: 45, turmas: ['1°', '2°', '3°'] },
   { course: 'Massoterapia', total: 45, turmas: ['1°', '2°', '3°'] },
 ];

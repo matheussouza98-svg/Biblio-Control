@@ -7,6 +7,75 @@ import {
     TextInput,
     FlatList,
 } from 'react-native';
+import { useThemedStyles } from '../theme/useThemedStyles';
+
+function createStyles(colors) {
+    return StyleSheet.create({
+        container: {
+            flex: 1,
+        },
+        title: {
+            fontSize: 32,
+            fontWeight: '700',
+            marginBottom: 8,
+            color: colors.text,
+        },
+        subtitle: {
+            fontSize: 16,
+            color: colors.textSecondary,
+            marginBottom: 20,
+        },
+        card: {
+            flexDirection: 'row',
+            marginBottom: 20,
+        },
+        input: {
+            flex: 1,
+            borderWidth: 1,
+            borderColor: colors.border,
+            borderRadius: 8,
+            paddingHorizontal: 12,
+            height: 45,
+            backgroundColor: colors.surface,
+            color: colors.text,
+        },
+        button: {
+            marginLeft: 10,
+            backgroundColor: colors.primary,
+            paddingHorizontal: 20,
+            justifyContent: 'center',
+            borderRadius: 8,
+        },
+        buttonText: {
+            color: colors.white,
+            fontWeight: '600',
+        },
+        item: {
+            backgroundColor: colors.surface,
+            padding: 15,
+            borderRadius: 8,
+            marginBottom: 10,
+            borderWidth: 1,
+            borderColor: colors.border,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+        },
+        itemText: {
+            fontSize: 16,
+            color: colors.text,
+        },
+        editText: {
+            color: colors.primary,
+            fontWeight: 'bold',
+            marginRight: 10,
+        },
+        deleteText: {
+            color: colors.danger,
+            fontWeight: 'bold',
+        },
+    });
+}
 
 export default function LocationsScreen() {
     const [location, setLocation] = useState('');
@@ -17,6 +86,7 @@ export default function LocationsScreen() {
     ]);
 
     const [editingIndex, setEditingIndex] = useState(null);
+    const styles = useThemedStyles(createStyles);
 
     const addLocation = () => {
         if (!location.trim()) return;
@@ -78,13 +148,13 @@ export default function LocationsScreen() {
 
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity onPress={() => editLocation(index)}>
-                                <Text style={{ color: 'blue', fontWeight: 'bold', marginRight: 10 }}>
+                                <Text style={styles.editText}>
                                     Editar
                                 </Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity onPress={() => deleteLocation(index)}>
-                                <Text style={{ color: 'red', fontWeight: 'bold' }}>
+                                <Text style={styles.deleteText}>
                                     Excluir
                                 </Text>
                             </TouchableOpacity>
@@ -95,65 +165,3 @@ export default function LocationsScreen() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-
-    title: {
-        fontSize: 32,
-        fontWeight: '700',
-        marginBottom: 8,
-    },
-
-    subtitle: {
-        fontSize: 16,
-        color: '#666',
-        marginBottom: 20,
-    },
-
-    card: {
-        flexDirection: 'row',
-        marginBottom: 20,
-    },
-
-    input: {
-        flex: 1,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        height: 45,
-        backgroundColor: '#fff',
-    },
-
-    button: {
-        marginLeft: 10,
-        backgroundColor: '#0047AB',
-        paddingHorizontal: 20,
-        justifyContent: 'center',
-        borderRadius: 8,
-    },
-
-    buttonText: {
-        color: '#fff',
-        fontWeight: '600',
-    },
-
-    item: {
-        backgroundColor: '#fff',
-        padding: 15,
-        borderRadius: 8,
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: '#eee',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-
-    itemText: {
-        fontSize: 16,
-    },
-});

@@ -23,7 +23,7 @@ export const books = [
     quantity: 5,
     available: 3,
     status: 'available',
-    coverColor: '#0047AB',
+    coverColor: '#1A7A3C',
   },
   {
     id: '2',
@@ -112,7 +112,7 @@ export const recentBorrows = [
     borrowDate: '18/06/2026',
     returnDate: '02/07/2026',
     status: 'borrowed',
-    coverColor: '#0047AB',
+    coverColor: '#1A7A3C',
   },
   {
     id: '2',

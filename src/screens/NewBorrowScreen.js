@@ -1,25 +1,14 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { books, students } from '../data/mockData';
+import { CLASS_OPTIONS } from '../data/generateStudents';
 import { useTheme } from '../theme/ThemeContext';
 import { useThemedStyles } from '../theme/useThemedStyles';
-import { Picker } from '@react-native-picker/picker';
+import ThemedScrollList from '../components/ThemedScrollList';
 
-const classes = [
-  '1º Administração',
-  '2º Administração',
-  '3º Administração',
-  '1º Desenvolvimento de Sistemas',
-  '2º Desenvolvimento de Sistemas',
-  '3º Desenvolvimento de Sistemas',
-  '1º Edificações',
-  '2º Edificações',
-  '3º Edificações',
-  '1º Massoterapia',
-  '2º Massoterapia',
-  '3º Massoterapia',
-];
+const LIST_HEIGHT = 320;
+const TURMA_BLOCK_HEIGHT = 92;
 
 function createStyles(colors) {
   return StyleSheet.create({
@@ -41,16 +30,83 @@ function createStyles(colors) {
       gap: 24,
       flexWrap: 'wrap',
       marginBottom: 24,
+      alignItems: 'stretch',
     },
     formSection: {
       flex: 1,
       minWidth: 280,
+      flexDirection: 'column',
+    },
+    turmaBlock: {
+      marginBottom: 4,
+    },
+    topSpacer: {
+      height: TURMA_BLOCK_HEIGHT,
+      marginBottom: 4,
+    },
+    selectionBlock: {
+      flex: 1,
+      flexDirection: 'column',
     },
     label: {
       fontSize: 14,
       fontWeight: '600',
       color: colors.text,
       marginBottom: 10,
+    },
+    selectTrigger: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 10,
+      backgroundColor: colors.surfaceAlt,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      marginBottom: 4,
+    },
+    selectTriggerOpen: {
+      borderColor: colors.primary,
+    },
+    selectValue: {
+      fontSize: 14,
+      color: colors.text,
+      flex: 1,
+    },
+    selectPlaceholder: {
+      fontSize: 14,
+      color: colors.textMuted,
+      flex: 1,
+    },
+    dropdown: {
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 10,
+      backgroundColor: colors.surface,
+      marginBottom: 15,
+      maxHeight: 280,
+      overflow: 'hidden',
+      zIndex: 10,
+    },
+    dropdownItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    dropdownItemLast: {
+      borderBottomWidth: 0,
+    },
+    dropdownItemActive: {
+      backgroundColor: colors.primaryLight,
+    },
+    dropdownItemText: {
+      fontSize: 14,
+      color: colors.text,
     },
     searchInput: {
       backgroundColor: colors.surfaceAlt,
@@ -65,11 +121,14 @@ function createStyles(colors) {
       outlineStyle: 'none',
     },
     list: {
-      maxHeight: 200,
+      height: LIST_HEIGHT,
       borderWidth: 1,
       borderColor: colors.border,
       borderRadius: 10,
       backgroundColor: colors.surfaceAlt,
+    },
+    listPlaceholder: {
+      height: LIST_HEIGHT,
     },
     listItem: {
       flexDirection: 'row',
@@ -156,6 +215,7 @@ function createStyles(colors) {
 
 export default function NewBorrowScreen() {
   const [selectedClass, setSelectedClass] = useState('');
+  const [turmaDropdownOpen, setTurmaDropdownOpen] = useState(false);
 
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [selectedBook, setSelectedBook] = useState(null);
@@ -178,12 +238,20 @@ export default function NewBorrowScreen() {
         b.code.toLowerCase().includes(bookSearch.toLowerCase()))
   );
 
+  const handleSelectTurma = (turma) => {
+    setSelectedClass(turma);
+    setSelectedStudent(null);
+    setStudentSearch('');
+    setTurmaDropdownOpen(false);
+  };
+
   return (
     <View style={styles.card}>
       <Text style={styles.sectionTitle}>Registrar Novo Empréstimo</Text>
 
       <View style={styles.formRow}>
         <View style={styles.formSection}>
+          <View style={styles.turmaBlock}>
 
           <Text style={styles.label}>
             <Ionicons
@@ -194,38 +262,52 @@ export default function NewBorrowScreen() {
             {' '}Selecionar Turma
           </Text>
 
-          <View
-            style={{
-              borderWidth: 1,
-              borderColor: colors.border,
-              borderRadius: 10,
-              backgroundColor: colors.surfaceAlt,
-              marginBottom: 15,
-            }}
+          <TouchableOpacity
+            style={[styles.selectTrigger, turmaDropdownOpen && styles.selectTriggerOpen]}
+            onPress={() => setTurmaDropdownOpen((open) => !open)}
+            activeOpacity={0.8}
           >
-            <Picker
-              selectedValue={selectedClass}
-              onValueChange={(value) => {
-                setSelectedClass(value);
-                setSelectedStudent(null);
-                setStudentSearch('');
-              }}
-            >
-              <Picker.Item
-                label="Selecione uma turma"
-                value=""
-              />
+            <Text style={selectedClass ? styles.selectValue : styles.selectPlaceholder}>
+              {selectedClass || 'Selecionar turma'}
+            </Text>
+            <Ionicons
+              name={turmaDropdownOpen ? 'chevron-up' : 'chevron-down'}
+              size={18}
+              color={colors.textMuted}
+            />
+          </TouchableOpacity>
 
-              {classes.map((item) => (
-                <Picker.Item
-                  key={item}
-                  label={item}
-                  value={item}
-                />
-              ))}
-            </Picker>
+          {turmaDropdownOpen && (
+            <ThemedScrollList style={styles.dropdown}>
+              {CLASS_OPTIONS.map((item, index) => {
+                const isSelected = selectedClass === item;
+                const isLast = index === CLASS_OPTIONS.length - 1;
+
+                return (
+                  <TouchableOpacity
+                    key={item}
+                    style={[
+                      styles.dropdownItem,
+                      isSelected && styles.dropdownItemActive,
+                      isLast && styles.dropdownItemLast,
+                    ]}
+                    onPress={() => handleSelectTurma(item)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.dropdownItemText}>{item}</Text>
+                    {isSelected && (
+                      <Ionicons name="checkmark" size={18} color={colors.primary} />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </ThemedScrollList>
+          )}
+
+          {!turmaDropdownOpen && <View style={{ marginBottom: 11 }} />}
           </View>
 
+          <View style={styles.selectionBlock}>
           {selectedClass ? (
             <>
               <Text style={styles.label}>
@@ -245,7 +327,7 @@ export default function NewBorrowScreen() {
                 onChangeText={setStudentSearch}
               />
 
-              <ScrollView style={styles.list} nestedScrollEnabled>
+              <ThemedScrollList style={styles.list}>
                 {filteredStudents.map((student) => (
                   <TouchableOpacity
                     key={student.id}
@@ -287,12 +369,17 @@ export default function NewBorrowScreen() {
                     )}
                   </TouchableOpacity>
                 ))}
-              </ScrollView>
+              </ThemedScrollList>
             </>
-          ) : null}
+          ) : (
+            <View style={styles.listPlaceholder} />
+          )}
+          </View>
         </View>
 
         <View style={styles.formSection}>
+          <View style={styles.topSpacer} />
+          <View style={styles.selectionBlock}>
           <Text style={styles.label}>
             <Ionicons name="book-outline" size={16} color={colors.primary} /> Selecionar Livro
           </Text>
@@ -303,7 +390,7 @@ export default function NewBorrowScreen() {
             value={bookSearch}
             onChangeText={setBookSearch}
           />
-          <ScrollView style={styles.list} nestedScrollEnabled>
+          <ThemedScrollList style={styles.list}>
             {filteredBooks.map((book) => (
               <TouchableOpacity
                 key={book.id}
@@ -322,7 +409,8 @@ export default function NewBorrowScreen() {
                 )}
               </TouchableOpacity>
             ))}
-          </ScrollView>
+          </ThemedScrollList>
+          </View>
         </View>
       </View>
 
