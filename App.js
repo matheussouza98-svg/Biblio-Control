@@ -12,6 +12,8 @@ import { books as initialBooks } from './src/data/mockData';
 import ReportsScreen from './src/screens/ReportsScreen';
 import CategoriesScreen from './src/screens/CategoriesScreen';
 import LocationsScreen from './src/screens/LocationsScreen';
+import RegisterStudentScreen from './src/screens/RegisterStudentScreen';
+import { students as initialStudents } from './src/data/mockData';
 
 const COVER_COLORS = ['#1A7A3C', '#E8750A', '#15803D', '#7C3AED', '#DC2626', '#0891B2'];
 
@@ -40,6 +42,7 @@ export default function App() {
   const [screen, setScreen] = useState('dashboard');
   const [params, setParams] = useState({});
   const [booksList, setBooksList] = useState(initialBooks);
+  const [studentsList, setStudentsList] = useState(initialStudents);
 
   const navigate = (target, navParams = {}) => {
     setScreen(target);
@@ -129,12 +132,31 @@ export default function App() {
         );
       }
       case 'students':
-        return <StudentsScreen />;
+        return <StudentsScreen students={studentsList} onNavigate={navigate} />;
+      case 'registerStudent':
+        return (
+          <RegisterStudentScreen
+            onBack={() => navigate('students')}
+            onSave={(formData) => {
+              setStudentsList((prev) => [
+                ...prev,
+                {
+                  id: String(Date.now()),
+                  name: formData.name.trim(),
+                  registration: formData.registration.trim(),
+                  class: formData.class,
+                  course: formData.course,
+                  avatarColor: `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`,
+                },
+              ]);
+            }}
+          />
+        );
       case 'loans':
         return <LoansScreen key={params.tab || 'history'} initialTab={params.tab || 'history'} />;
 
       case 'reports':
-        return <ReportsScreen />;
+        return <ReportsScreen initialTab={params.tab || 'loans'} />;
 
       case 'categories':
         return <CategoriesScreen />;
@@ -143,18 +165,22 @@ export default function App() {
         return <LocationsScreen />;
 
       case 'settings':
-        return <SettingsScreen />;
+        return <SettingsScreen initialSection={params.section || 'users'} />;
       default:
         return <DashboardScreen onNavigate={navigate} />;
     }
   };
 
   const sidebarScreen =
-    screen === 'bookDetail' || screen === 'editBook' ? 'books' : screen;
+    screen === 'bookDetail' || screen === 'editBook'
+      ? 'books'
+      : screen === 'registerStudent'
+        ? 'registerStudent'
+        : screen;
 
   return (
     <ThemeProvider>
-      <AppLayout activeScreen={sidebarScreen} onNavigate={navigate}>
+      <AppLayout activeScreen={sidebarScreen} activeParams={params} onNavigate={navigate}>
         {renderScreen()}
       </AppLayout>
     </ThemeProvider>

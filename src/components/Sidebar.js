@@ -1,27 +1,93 @@
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeContext';
 import { useThemedStyles } from '../theme/useThemedStyles';
 
-const NAV_ITEMS = [
-  { id: 'dashboard', label: 'Início', icon: 'home-outline', iconActive: 'home' },
-
-  { id: 'books', label: 'Livros', icon: 'book-outline', iconActive: 'book' },
-
-  { id: 'students', label: 'Alunos', icon: 'school-outline', iconActive: 'school' },
-
-  { id: 'loans', label: 'Empréstimos', icon: 'swap-horizontal-outline', iconActive: 'swap-horizontal' },
-
+const NAV_MENU = [
   {
-    id: 'reports',
+    id: 'dashboard',
+    label: 'Início',
+    icon: 'home-outline',
+    iconActive: 'home',
+  },
+  {
+    id: 'books-group',
+    label: 'Livros',
+    icon: 'book-outline',
+    iconActive: 'book',
+    children: [
+      { navKey: 'books', screen: 'books', label: 'Todos os Livros' },
+      { navKey: 'registerBook', screen: 'registerBook', label: 'Cadastrar Livro' },
+      { navKey: 'categories', screen: 'categories', label: 'Categorias' },
+      { navKey: 'locations', screen: 'locations', label: 'Localizações' },
+    ],
+  },
+  {
+    id: 'students-group',
+    label: 'Alunos',
+    icon: 'school-outline',
+    iconActive: 'school',
+    children: [
+      { navKey: 'students', screen: 'students', label: 'Todos os Alunos' },
+      { navKey: 'registerStudent', screen: 'registerStudent', label: 'Cadastrar Aluno' },
+    ],
+  },
+  {
+    id: 'loans-group',
+    label: 'Empréstimos',
+    icon: 'swap-horizontal-outline',
+    iconActive: 'swap-horizontal',
+    children: [
+      { navKey: 'loans:history', screen: 'loans', params: { tab: 'history' }, label: 'Todos os Empréstimos' },
+      { navKey: 'loans:new', screen: 'loans', params: { tab: 'new' }, label: 'Novo Empréstimo' },
+      { navKey: 'loans:return', screen: 'loans', params: { tab: 'return' }, label: 'Devoluções' },
+      { navKey: 'loans:overdue', screen: 'loans', params: { tab: 'overdue' }, label: 'Atrasados' },
+    ],
+  },
+  {
+    id: 'reports-group',
     label: 'Relatórios',
     icon: 'bar-chart-outline',
     iconActive: 'bar-chart',
+    children: [
+      { navKey: 'reports:loans', screen: 'reports', params: { tab: 'loans' }, label: 'Empréstimos' },
+      { navKey: 'reports:topBooks', screen: 'reports', params: { tab: 'topBooks' }, label: 'Livros Mais Emprestados' },
+      { navKey: 'reports:topStudents', screen: 'reports', params: { tab: 'topStudents' }, label: 'Alunos Mais Ativos' },
+      { navKey: 'reports:export', screen: 'reports', params: { tab: 'export' }, label: 'Exportar PDF' },
+    ],
   },
-
-  { id: 'settings', label: 'Configurações', icon: 'settings-outline', iconActive: 'settings' },
+  {
+    id: 'settings-group',
+    label: 'Configurações',
+    icon: 'settings-outline',
+    iconActive: 'settings',
+    children: [
+      { navKey: 'settings:users', screen: 'settings', params: { section: 'users' }, label: 'Usuários' },
+      { navKey: 'settings:profile', screen: 'settings', params: { section: 'profile' }, label: 'Perfil' },
+      { navKey: 'settings:backup', screen: 'settings', params: { section: 'backup' }, label: 'Backup' },
+      { navKey: 'settings:system', screen: 'settings', params: { section: 'system' }, label: 'Sistema' },
+    ],
+  },
 ];
+
+export function resolveNavKey(screen, params = {}) {
+  if (screen === 'bookDetail' || screen === 'editBook') return 'books';
+  if (screen === 'loans') return `loans:${params.tab || 'history'}`;
+  if (screen === 'reports') return `reports:${params.tab || 'loans'}`;
+  if (screen === 'settings') return `settings:${params.section || 'users'}`;
+  return screen;
+}
+
+function getDefaultOpenSections(navKey) {
+  const open = {};
+  NAV_MENU.forEach((group) => {
+    if (group.children?.some((child) => child.navKey === navKey)) {
+      open[group.id] = true;
+    }
+  });
+  return open;
+}
 
 function createStyles(colors) {
   return StyleSheet.create({
@@ -63,37 +129,9 @@ function createStyles(colors) {
       color: 'rgba(255,255,255,0.6)',
       letterSpacing: 2,
     },
-    navLabel: {
-      fontSize: 10,
-      fontWeight: '700',
-      color: 'rgba(255,255,255,0.4)',
-      letterSpacing: 1.5,
-      paddingHorizontal: 12,
-      marginBottom: 12,
-    },
     navList: {
       flex: 1,
     },
-
-    subMenu: {
-      marginLeft: 24,
-      marginBottom: 8,
-    },
-
-    subMenuItem: {
-      paddingVertical: 8,
-      paddingLeft: 20,
-    },
-
-    subMenuText: {
-      color: 'rgba(255,255,255,0.65)',
-      fontSize: 14,
-    },
-
-    arrow: {
-      marginLeft: 'auto',
-    },
-
     navItem: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -125,6 +163,25 @@ function createStyles(colors) {
       width: 3,
       backgroundColor: colors.white,
       borderRadius: 2,
+    },
+    arrow: {
+      marginLeft: 'auto',
+    },
+    subMenu: {
+      marginLeft: 36,
+      marginBottom: 4,
+    },
+    subMenuItem: {
+      paddingVertical: 9,
+      paddingLeft: 4,
+    },
+    subMenuText: {
+      color: 'rgba(255,255,255,0.65)',
+      fontSize: 14,
+    },
+    subMenuTextActive: {
+      color: colors.white,
+      fontWeight: '700',
     },
     footer: {
       flexDirection: 'row',
@@ -164,11 +221,43 @@ function createStyles(colors) {
   });
 }
 
-export default function Sidebar({ activeScreen, onNavigate }) {
-  const [booksOpen, setBooksOpen] = useState(false);
+export default function Sidebar({ activeScreen, activeParams = {}, onNavigate }) {
+  const activeNavKey = useMemo(
+    () => resolveNavKey(activeScreen, activeParams),
+    [activeScreen, activeParams]
+  );
+
+  const [openSections, setOpenSections] = useState(() =>
+    getDefaultOpenSections(activeNavKey)
+  );
+
+  useEffect(() => {
+    setOpenSections((prev) => {
+      const next = { ...prev };
+      NAV_MENU.forEach((group) => {
+        if (group.children?.some((child) => child.navKey === activeNavKey)) {
+          next[group.id] = true;
+        }
+      });
+      return next;
+    });
+  }, [activeNavKey]);
 
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+
+  const toggleSection = (groupId) => {
+    setOpenSections((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
+  };
+
+  const isGroupActive = (group) => {
+    if (!group.children) return activeNavKey === group.id;
+    return group.children.some((child) => child.navKey === activeNavKey);
+  };
+
+  const handleChildPress = (child) => {
+    onNavigate(child.screen, child.params || {});
+  };
 
   return (
     <View style={styles.sidebar}>
@@ -182,156 +271,78 @@ export default function Sidebar({ activeScreen, onNavigate }) {
         </View>
       </View>
 
-      <Text style={styles.navLabel}>NAVEGAÇÃO</Text>
-
       <ScrollView style={styles.navList} showsVerticalScrollIndicator={false}>
-
-        <TouchableOpacity
-          style={[
-            styles.navItem,
-            activeScreen === 'dashboard' && styles.navItemActive,
-          ]}
-          onPress={() => onNavigate('dashboard')}
-        >
-          <Ionicons
-            name={activeScreen === 'dashboard' ? 'home' : 'home-outline'}
-            size={22}
-            color={
-              activeScreen === 'dashboard'
-                ? colors.white
-                : 'rgba(255,255,255,0.65)'
-            }
-          />
-
-          <Text
-            style={[
-              styles.navText,
-              activeScreen === 'dashboard' && styles.navTextActive,
-            ]}
-          >
-            Início
-          </Text>
-
-          {activeScreen === 'dashboard' && (
-            <View style={styles.activeIndicator} />
-          )}
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => setBooksOpen(!booksOpen)}
-        >
-          <Ionicons
-            name="book-outline"
-            size={22}
-            color="rgba(255,255,255,0.65)"
-          />
-
-          <Text style={styles.navText}>Livros</Text>
-
-          <Ionicons
-            name={booksOpen ? 'chevron-down' : 'chevron-forward'}
-            size={18}
-            color="rgba(255,255,255,0.65)"
-            style={styles.arrow}
-          />
-        </TouchableOpacity>
-
-        {booksOpen && (
-          <View style={styles.subMenu}>
-            <TouchableOpacity
-              style={styles.subMenuItem}
-              onPress={() => onNavigate('books')}
-            >
-              <Text
-                style={[
-                  styles.subMenuText,
-                  activeScreen === 'books' && {
-                    color: colors.white,
-                    fontWeight: '700',
-                  },
-                ]}
+        {NAV_MENU.map((group) => {
+          if (!group.children) {
+            const isActive = activeNavKey === group.id;
+            return (
+              <TouchableOpacity
+                key={group.id}
+                style={[styles.navItem, isActive && styles.navItemActive]}
+                onPress={() => onNavigate(group.id)}
               >
-                📖 Todos os Livros
-              </Text>
-            </TouchableOpacity>
+                <Ionicons
+                  name={isActive ? group.iconActive : group.icon}
+                  size={22}
+                  color={isActive ? colors.white : 'rgba(255,255,255,0.65)'}
+                />
+                <Text style={[styles.navText, isActive && styles.navTextActive]}>
+                  {group.label}
+                </Text>
+                {isActive && <View style={styles.activeIndicator} />}
+              </TouchableOpacity>
+            );
+          }
 
-            <TouchableOpacity
-              style={styles.subMenuItem}
-              onPress={() => onNavigate('registerBook')}
-            >
-              <Text
-                style={[
-                  styles.subMenuText,
-                  activeScreen === 'registerBook' && {
-                    color: colors.white,
-                    fontWeight: '700',
-                  },
-                ]}
-              >
-                ➕ Cadastrar Livro
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.subMenuItem}
-              onPress={() => onNavigate('categories')}
-            >
-              <Text
-                style={[
-                  styles.subMenuText,
-                  activeScreen === 'categories' && {
-                    color: colors.white,
-                    fontWeight: '700',
-                  },
-                ]}
-              >
-                🏷 Categorias
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.subMenuItem}
-              onPress={() => onNavigate('locations')}
-            >
-              <Text
-                style={[
-                  styles.subMenuText,
-                  activeScreen === 'locations' && {
-                    color: colors.white,
-                    fontWeight: '700',
-                  },
-                ]}
-              >
-                📍 Localizações
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {NAV_ITEMS.filter(
-          item => item.id !== 'books' && item.id !== 'dashboard'
-        ).map((item) => {
-          const isActive = activeScreen === item.id;
+          const isOpen = openSections[group.id];
+          const groupActive = isGroupActive(group);
 
           return (
-            <TouchableOpacity
-              key={item.id}
-              style={[styles.navItem, isActive && styles.navItemActive]}
-              onPress={() => onNavigate(item.id)}
-            >
-              <Ionicons
-                name={isActive ? item.iconActive : item.icon}
-                size={22}
-                color={isActive ? colors.white : 'rgba(255,255,255,0.65)'}
-              />
+            <View key={group.id}>
+              <TouchableOpacity
+                style={[styles.navItem, groupActive && !isOpen && styles.navItemActive]}
+                onPress={() => toggleSection(group.id)}
+              >
+                <Ionicons
+                  name={groupActive ? group.iconActive : group.icon}
+                  size={22}
+                  color={groupActive ? colors.white : 'rgba(255,255,255,0.65)'}
+                />
+                <Text style={[styles.navText, groupActive && styles.navTextActive]}>
+                  {group.label}
+                </Text>
+                <Ionicons
+                  name={isOpen ? 'chevron-down' : 'chevron-forward'}
+                  size={18}
+                  color="rgba(255,255,255,0.65)"
+                  style={styles.arrow}
+                />
+              </TouchableOpacity>
 
-              <Text style={[styles.navText, isActive && styles.navTextActive]}>
-                {item.label}
-              </Text>
-
-              {isActive && <View style={styles.activeIndicator} />}
-            </TouchableOpacity>
+              {isOpen && (
+                <View style={styles.subMenu}>
+                  {group.children.map((child) => {
+                    const isActive = activeNavKey === child.navKey;
+                    return (
+                      <TouchableOpacity
+                        key={child.navKey}
+                        style={styles.subMenuItem}
+                        onPress={() => handleChildPress(child)}
+                      >
+                        <Text
+                          style={[
+                            styles.subMenuText,
+                            isActive && styles.subMenuTextActive,
+                          ]}
+                        >
+                          {child.label}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              )}
+            </View>
           );
         })}
       </ScrollView>

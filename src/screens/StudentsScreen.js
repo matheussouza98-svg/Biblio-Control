@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import PageHeader from '../components/PageHeader';
 import SearchBar from '../components/SearchBar';
 import FilterChips from '../components/FilterChips';
-import { students } from '../data/mockData';
+import { students as defaultStudents } from '../data/mockData';
 import { useThemedStyles } from '../theme/useThemedStyles';
 
 const COURSE_FILTERS = [
@@ -98,7 +98,7 @@ function createStyles(colors) {
   });
 }
 
-export default function StudentsScreen() {
+export default function StudentsScreen({ students = defaultStudents, onNavigate }) {
   const [search, setSearch] = useState('');
   const [courseFilter, setCourseFilter] = useState('all');
   const styles = useThemedStyles(createStyles);
@@ -124,6 +124,7 @@ export default function StudentsScreen() {
         subtitle={`${filtered.length} aluno(s) cadastrados.`}
         actionLabel="Novo Aluno"
         actionIcon="person-add-outline"
+        onAction={() => onNavigate?.('registerStudent')}
       />
 
       <View style={styles.toolbar}>

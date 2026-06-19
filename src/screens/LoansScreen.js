@@ -13,6 +13,7 @@ const TABS = [
   { id: 'history', label: 'Histórico', icon: 'time-outline' },
   { id: 'new', label: 'Novo Empréstimo', icon: 'add-circle-outline' },
   { id: 'return', label: 'Devolução', icon: 'return-down-back-outline' },
+  { id: 'overdue', label: 'Atrasados', icon: 'alert-circle-outline' },
 ];
 
 function createStyles(colors) {
@@ -104,13 +105,28 @@ export default function LoansScreen({ initialTab = 'history' }) {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
 
+  const displayedBorrows =
+    activeTab === 'overdue'
+      ? recentBorrows.filter((item) => item.status === 'overdue')
+      : recentBorrows;
+
+  const pageTitle =
+    activeTab === 'new'
+      ? 'Novo Empréstimo'
+      : activeTab === 'return'
+        ? 'Devoluções'
+        : activeTab === 'overdue'
+          ? 'Empréstimos Atrasados'
+          : 'Empréstimos';
+
+  const pageSubtitle =
+    activeTab === 'overdue'
+      ? `${displayedBorrows.length} empréstimo(s) com devolução atrasada.`
+      : 'Gerencie empréstimos, devoluções e histórico\nTotal de 24 empréstimos registrados.';
+
   return (
     <View>
-      <PageHeader
-        title="Empréstimos"
-        subtitle="Gerencie empréstimos, devoluções e histórico
-Total de 24 empréstimos registrados."
-      />
+      <PageHeader title={pageTitle} subtitle={pageSubtitle} />
 
       <View style={styles.tabs}>
         {TABS.map((tab) => {
@@ -135,7 +151,7 @@ Total de 24 empréstimos registrados."
         })}
       </View>
 
-      {activeTab === 'history' && (
+      {(activeTab === 'history' || activeTab === 'overdue') && (
         <View style={styles.table}>
           <View style={styles.tableHeader}>
             <Text style={[styles.th, { flex: 2.5 }]}>Livro</Text>
@@ -144,7 +160,7 @@ Total de 24 empréstimos registrados."
             <Text style={[styles.th, { flex: 1.2 }]}>Devolução</Text>
             <Text style={[styles.th, { flex: 1 }]}>Status</Text>
           </View>
-          {recentBorrows.map((item, index) => (
+          {displayedBorrows.map((item, index) => (
             <View key={item.id} style={[styles.row, index % 2 === 0 && styles.rowAlt]}>
               <View style={[styles.td, { flex: 2.5, flexDirection: 'row', alignItems: 'center', gap: 10 }]}>
                 <View style={[styles.cover, { backgroundColor: item.coverColor }]}>

@@ -23,14 +23,18 @@ function createStyles(colors) {
   });
 }
 
-export default function AppLayout({ activeScreen, onNavigate, children }) {
+export default function AppLayout({ activeScreen, activeParams = {}, onNavigate, children }) {
   const { isDark } = useTheme();
   const styles = useThemedStyles(createStyles);
 
   return (
     <View style={styles.container}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
-      <Sidebar activeScreen={activeScreen} onNavigate={onNavigate} />
+      <Sidebar
+        activeScreen={activeScreen}
+        activeParams={activeParams}
+        onNavigate={onNavigate}
+      />
       <ScrollView style={styles.main} contentContainerStyle={styles.contentInner}>
         {children}
       </ScrollView>
