@@ -81,7 +81,13 @@ export default function App() {
   const renderScreen = () => {
     switch (screen) {
       case 'dashboard':
-        return <DashboardScreen onNavigate={navigate} />;
+        return (
+          <DashboardScreen
+            onNavigate={navigate}
+            books={booksList}
+            students={studentsList}
+          />
+        );
       case 'books':
         return (
           <BooksScreen
@@ -166,8 +172,14 @@ export default function App() {
 
       case 'settings':
         return <SettingsScreen initialSection={params.section || 'users'} />;
-      default:
-        return <DashboardScreen onNavigate={navigate} />;
+        default:
+        return (
+          <DashboardScreen
+            onNavigate={navigate}
+            books={booksList}
+            students={studentsList}
+          />
+        );
     }
   };
 

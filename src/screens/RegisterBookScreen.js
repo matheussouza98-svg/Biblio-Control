@@ -220,7 +220,7 @@ export default function RegisterBookScreen({
   );
 
   return (
-    <View>
+    <View style={{ width: '100%' }}>
       <TouchableOpacity style={styles.backBtn} onPress={onBack} activeOpacity={0.7}>
         <Ionicons name="arrow-back" size={20} color={colors.primary} />
         <Text style={styles.backText}>{backLabel}</Text>

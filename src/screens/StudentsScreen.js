@@ -118,7 +118,7 @@ export default function StudentsScreen({ students = defaultStudents, onNavigate 
   }, [search, courseFilter]);
 
   return (
-    <View>
+    <View style={{ width: '100%' }}>
       <PageHeader
         title="Alunos"
         subtitle={`${filtered.length} aluno(s) cadastrados.`}

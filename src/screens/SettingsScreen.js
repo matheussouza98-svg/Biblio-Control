@@ -133,7 +133,7 @@ export default function SettingsScreen({ initialSection = 'users' }) {
   const section = SECTIONS[initialSection] || SECTIONS.users;
 
   return (
-    <View>
+    <View style={{ width: '100%' }}>
       <PageHeader title={section.title} subtitle={section.subtitle} />
 
       {initialSection === 'system' && (

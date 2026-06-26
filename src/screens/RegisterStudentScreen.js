@@ -140,7 +140,7 @@ export default function RegisterStudentScreen({ onBack, onSave }) {
   };
 
   return (
-    <View>
+    <View style={{ width: '100%' }}>
       <TouchableOpacity style={styles.backBtn} onPress={onBack}>
         <Ionicons name="arrow-back" size={20} color={colors.primary} />
         <Text style={styles.backText}>Voltar para alunos</Text>

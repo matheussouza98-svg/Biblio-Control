@@ -19,7 +19,12 @@ export default function BooksScreen({ books, onAddBook, onNavigate }) {
 
   const filteredBooks = useMemo(() => {
     return books.filter((book) => {
-      const matchesFilter = filter === 'all' || book.status === filter;
+      const isFullyAvailable = book.available === book.quantity;
+      const hasBorrowed = book.available < book.quantity;
+      const matchesFilter = 
+        filter === 'all' || 
+        (filter === 'available' && isFullyAvailable) ||
+        (filter === 'borrowed' && hasBorrowed);
       const query = search.toLowerCase();
       const matchesSearch =
         !query ||
@@ -41,7 +46,7 @@ export default function BooksScreen({ books, onAddBook, onNavigate }) {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <PageHeader
         title="Livros"
         subtitle={`${filteredBooks.length} livro(s) cadastrados.`}
@@ -76,6 +81,9 @@ export default function BooksScreen({ books, onAddBook, onNavigate }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+  },
   toolbar: {
     marginBottom: 16,
     flexDirection: 'row',

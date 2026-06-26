@@ -125,7 +125,7 @@ export default function LoansScreen({ initialTab = 'history' }) {
       : 'Gerencie empréstimos, devoluções e histórico\nTotal de 24 empréstimos registrados.';
 
   return (
-    <View>
+    <View style={{ width: '100%' }}>
       <PageHeader title={pageTitle} subtitle={pageSubtitle} />
 
       <View style={styles.tabs}>

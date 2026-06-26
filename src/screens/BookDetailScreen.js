@@ -170,7 +170,15 @@ export default function BookDetailScreen({ book, onBack, onEdit, onDelete }) {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
 
-  if (!book) return null;
+  console.log('Livro recebido:', book);
+
+  if (!book) {
+    return (
+      <View>
+        <Text>Livro não encontrado.</Text>
+      </View>
+    );
+  }
 
   const hideToast = () => setToast((prev) => ({ ...prev, visible: false }));
 
@@ -185,7 +193,7 @@ export default function BookDetailScreen({ book, onBack, onEdit, onDelete }) {
   };
 
   return (
-    <View>
+    <View style={{ width: '100%' }}>
       <TouchableOpacity style={styles.backBtn} onPress={onBack} activeOpacity={0.7}>
         <Ionicons name="arrow-back" size={20} color={colors.primary} />
         <Text style={styles.backText}>Voltar para Livros</Text>
@@ -237,7 +245,9 @@ export default function BookDetailScreen({ book, onBack, onEdit, onDelete }) {
               </View>
               <View>
                 <Text style={styles.detailLabel}>{field.label}</Text>
-                <Text style={styles.detailValue}>{book[field.key]}</Text>
+                <Text style={styles.detailValue}>
+                  {book[field.key] ?? '-'}
+                </Text>
               </View>
             </View>
           ))}

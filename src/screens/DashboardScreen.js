@@ -5,7 +5,7 @@ import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';
 import StatusBadge from '../components/StatusBadge';
 import SearchBar from '../components/SearchBar';
-import { stats, recentBorrows } from '../data/mockData';
+import { recentBorrows, stats } from '../data/mockData';
 import { useTheme } from '../theme/ThemeContext';
 import { useThemedStyles } from '../theme/useThemedStyles';
 
@@ -17,7 +17,7 @@ function createStyles(colors) {
       marginBottom: 16,
       flexWrap: 'wrap',
     },
-    
+
     searchAndFilters: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -146,7 +146,11 @@ function createStyles(colors) {
   });
 }
 
-export default function DashboardScreen({ onNavigate }) {
+export default function DashboardScreen({
+  onNavigate,
+  books = [],
+  students = [],
+}) {
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
 
@@ -157,8 +161,32 @@ export default function DashboardScreen({ onNavigate }) {
   const [cursoSelecionado, setCursoSelecionado] = useState('');
   const [showPeriodos, setShowPeriodos] = useState(false);
   const [periodoSelecionado, setPeriodoSelecionado] = useState('');
+  const totalBooks = books.length;
+
+  const totalStudents = students.length;
+
+  const availableBooks = books.reduce(
+    (total, book) => total + (book.available === book.quantity ? 1 : 0),
+    0
+  );
+
+  const borrowedBooks = books.reduce(
+    (total, book) =>
+      total + (book.available < book.quantity ? 1 : 0),
+    0
+  );
 
   const now = new Date();
+  const formatDate = (date) => {
+    const dia = String(date.getDate()).padStart(2, '0');
+    const mes = String(date.getMonth() + 1).padStart(2, '0');
+    const ano = date.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+  };
+  const todayDate = formatDate(now);
+
+  const borrowsToday = recentBorrows.filter(item => item.borrowDate === todayDate).length;
+  const returnsToday = recentBorrows.filter(item => item.returnDate === todayDate && item.status === 'returned').length;
 
   const ultimaAtualizacao = now.toLocaleString('pt-BR', {
     day: '2-digit',
@@ -235,7 +263,7 @@ export default function DashboardScreen({ onNavigate }) {
     });
 
   return (
-    <View>
+    <View style={{ width: '100%' }}>
       <PageHeader
         title="Painel de Controle da Biblioteca"
         subtitle="Gerencie livros, empréstimos, devoluções e usuários em um único lugar."
@@ -245,15 +273,33 @@ export default function DashboardScreen({ onNavigate }) {
       />
 
       <View style={styles.statsRow}>
-        <StatCard title="Total de Livros" value={stats.totalBooks.toLocaleString('pt-BR')} icon="book" iconColor={colors.primary} />
-        <StatCard title="Disponíveis" value={stats.availableBooks.toLocaleString('pt-BR')} icon="checkmark-circle" iconColor={colors.success} accentColor={colors.successBg} />
-        <StatCard title="Emprestados" value={stats.borrowedBooks.toLocaleString('pt-BR')} icon="swap-horizontal" iconColor={colors.danger} accentColor={colors.dangerBg} />
+        <StatCard
+          title="Total de Livros"
+          value={totalBooks.toLocaleString('pt-BR')}
+          icon="book"
+          iconColor={colors.primary}
+        />
+        <StatCard title="Disponíveis" value={availableBooks.toLocaleString('pt-BR')} icon="checkmark-circle" iconColor={colors.success} accentColor={colors.successBg} />
+        <StatCard title="Emprestados" value={borrowedBooks.toLocaleString('pt-BR')} icon="swap-horizontal" iconColor={colors.danger} accentColor={colors.dangerBg} />
       </View>
 
       <View style={styles.statsRow}>
-        <StatCard title="Total de Alunos" value={stats.totalStudents.toLocaleString('pt-BR')} icon="people" iconColor={colors.primary} />
-        <StatCard title="Empréstimos Hoje" value={stats.borrowsToday} icon="today" iconColor={colors.warning} accentColor={colors.warningBg} />
-        <StatCard title="Devoluções Hoje" value={stats.returnsToday} icon="return-down-back" iconColor={colors.success} accentColor={colors.successBg} />
+        <StatCard title="Total de Alunos" value={totalStudents.toLocaleString('pt-BR')} icon="people" iconColor={colors.primary} />
+        <StatCard
+          title="Empréstimos Hoje"
+          value={borrowsToday}
+          icon="today"
+          iconColor={colors.warning}
+          accentColor={colors.warningBg}
+        />
+
+        <StatCard
+          title="Devoluções Hoje"
+          value={returnsToday}
+          icon="return-down-back"
+          iconColor={colors.success}
+          accentColor={colors.successBg}
+        />
       </View>
 
       <View style={styles.section}>
