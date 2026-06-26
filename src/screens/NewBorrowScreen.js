@@ -129,6 +129,27 @@ function createStyles(colors) {
     },
     listPlaceholder: {
       height: LIST_HEIGHT,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 10,
+      backgroundColor: colors.surfaceAlt,
+    },
+    placeholderIcon: {
+      marginBottom: 16,
+    },
+    placeholderText: {
+      fontSize: 14,
+      color: colors.textMuted,
+      textAlign: 'center',
+      fontWeight: '500',
+    },
+    placeholderSubtext: {
+      fontSize: 13,
+      color: colors.textMuted,
+      textAlign: 'center',
+      marginTop: 8,
     },
     listItem: {
       flexDirection: 'row',
@@ -372,13 +393,21 @@ export default function NewBorrowScreen() {
               </ThemedScrollList>
             </>
           ) : (
-            <View style={styles.listPlaceholder} />
+            <View style={styles.listPlaceholder}>
+              <Ionicons
+                name="people-outline"
+                size={48}
+                color={colors.textMuted}
+                style={styles.placeholderIcon}
+              />
+              <Text style={styles.placeholderText}>Nenhuma turma selecionada.</Text>
+              <Text style={styles.placeholderSubtext}>Selecione uma turma para carregar os alunos.</Text>
+            </View>
           )}
           </View>
         </View>
 
         <View style={styles.formSection}>
-          <View style={styles.topSpacer} />
           <View style={styles.selectionBlock}>
           <Text style={styles.label}>
             <Ionicons name="book-outline" size={16} color={colors.primary} /> Selecionar Livro

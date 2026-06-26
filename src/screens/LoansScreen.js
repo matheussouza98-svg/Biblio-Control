@@ -110,14 +110,7 @@ export default function LoansScreen({ initialTab = 'history' }) {
       ? recentBorrows.filter((item) => item.status === 'overdue')
       : recentBorrows;
 
-  const pageTitle =
-    activeTab === 'new'
-      ? 'Novo Empréstimo'
-      : activeTab === 'return'
-        ? 'Devoluções'
-        : activeTab === 'overdue'
-          ? 'Empréstimos Atrasados'
-          : 'Empréstimos';
+  const pageTitle = 'Empréstimos';
 
   const pageSubtitle =
     activeTab === 'overdue'
